@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Ordering System - Delicious Meals Delivered Fast</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/">
+            🍔 Food Ordering System
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav align-items-center gap-2">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-light btn-sm px-3" href="/login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-primary btn-sm px-3" href="/register">Register</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<header class="py-5 bg-white border-bottom shadow-sm">
+    <div class="container py-4">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <span class="badge bg-warning text-dark mb-2 px-3 py-2 fs-6">🚀 Fast & Fresh Delivery</span>
+                <h1 class="display-4 fw-bold text-dark mt-2 mb-3">
+                    Order Delicious Food From Your Favorite Restaurants
+                </h1>
+                <p class="lead text-muted mb-4">
+                    Explore a wide variety of cuisines—from authentic Biryani to sizzling pizzas and juicy burgers. Order online with ease and track your delivery in real-time.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="/login" class="btn btn-primary btn-lg px-4 shadow">
+                        🍽️ Order Now
+                    </a>
+                    <a href="/register" class="btn btn-outline-secondary btn-lg px-4">
+                        👤 Create Account
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 text-center">
+                <div class="p-4 bg-light rounded-4 shadow-sm border">
+                    <div style="font-size: 80px;">🍕 🍔 🍛</div>
+                    <h4 class="mt-3 fw-bold">Hungry?</h4>
+                    <p class="text-muted mb-3">Login to browse restaurant menus and add items to your cart.</p>
+                    <a href="/login" class="btn btn-success w-100 py-2 fw-semibold">
+                        Sign In to Start Ordering →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- How It Works Section -->
+<section class="py-5 bg-light flex-grow-1">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">How It Works</h2>
+            <p class="text-muted">Get your favorite food in 4 easy steps</p>
+        </div>
+        <div class="row g-4 text-center">
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm p-4">
+                    <div style="font-size: 50px;">🔍</div>
+                    <h5 class="fw-bold mt-3">1. Discover</h5>
+                    <p class="text-muted small">Browse top-rated local restaurants and popular dishes.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm p-4">
+                    <div style="font-size: 50px;">🛒</div>
+                    <h5 class="fw-bold mt-3">2. Choose & Cart</h5>
+                    <p class="text-muted small">Select your favorite meals and customize your order.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm p-4">
+                    <div style="font-size: 50px;">💳</div>
+                    <h5 class="fw-bold mt-3">3. Easy Checkout</h5>
+                    <p class="text-muted small">Pay safely via UPI, Card, or Cash on Delivery.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm p-4">
+                    <div style="font-size: 50px;">🛵</div>
+                    <h5 class="fw-bold mt-3">4. Fast Delivery</h5>
+                    <p class="text-muted small">Sit back and enjoy fresh food delivered straight to your door.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Role Access Cards -->
+        <div class="row g-4 mt-4">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm p-4 bg-white">
+                    <div class="d-flex align-items-center">
+                        <div style="font-size: 45px;" class="me-3">👥</div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Customer Portal</h5>
+                            <p class="text-muted small mb-2">Browse menus, add items to cart, place orders, and review dishes.</p>
+                            <a href="/login" class="btn btn-outline-primary btn-sm">Customer Login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm p-4 bg-white">
+                    <div class="d-flex align-items-center">
+                        <div style="font-size: 45px;" class="me-3">🏪</div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Restaurant & Admin Portal</h5>
+                            <p class="text-muted small mb-2">Manage menus, food items, track customer orders, and update statuses.</p>
+                            <a href="/login" class="btn btn-outline-dark btn-sm">Partner Login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-dark text-white text-center py-4 mt-auto">
+    <div class="container">
+        <p class="mb-0 text-secondary">© 2026 Food Ordering System. All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

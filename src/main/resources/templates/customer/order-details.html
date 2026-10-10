@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Order Details - Food Ordering System</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<!-- Navigation Bar -->
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+
+        <a class="navbar-brand" href="/customer/dashboard">
+            🍔 Food Ordering System
+        </a>
+
+        <div>
+            <a href="/customer/dashboard"
+               class="btn btn-outline-light btn-sm me-2">
+                Dashboard
+            </a>
+
+            <a href="/customer/orders"
+               class="btn btn-outline-light btn-sm me-2">
+                My Orders
+            </a>
+
+            <a href="/customer/cart"
+               class="btn btn-outline-light btn-sm me-2">
+                Cart
+            </a>
+
+            <form action="/logout" method="post" style="display:inline;">
+                <button type="submit"
+                        class="btn btn-danger btn-sm">
+                    Logout
+                </button>
+            </form>
+        </div>
+
+    </div>
+</nav>
+
+
+<!-- Main Content -->
+<div class="container mt-4 mb-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Order Details</h1>
+
+        <a href="/customer/orders"
+           class="btn btn-secondary">
+            ← Back to Orders
+        </a>
+    </div>
+
+
+    <!-- Order Information Card -->
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <h3 class="mb-3">
+                Order #<span th:text="${order.id}">1</span>
+            </h3>
+
+            <p>
+                <strong>Order Date:</strong>
+                <span th:text="${order.orderDate}">
+                    2026-09-21
+                </span>
+            </p>
+
+            <!-- Order Status -->
+            <h4 class="mt-4">Order Status</h4>
+
+            <div class="alert alert-primary">
+                <strong th:text="${order.status}">
+                    PLACED
+                </strong>
+            </div>
+
+
+            <!-- Restaurant -->
+            <h4>Restaurant</h4>
+
+            <p th:text="${order.restaurant.name}">
+                Food Restaurant
+            </p>
+
+
+            <!-- Delivery Address -->
+            <h4>Delivery Address</h4>
+
+            <p th:text="${order.deliveryAddress}">
+                Hyderabad
+            </p>
+
+
+            <hr>
+
+
+            <!-- Items -->
+            <h3>Items</h3>
+
+            <div th:each="item : ${order.items}"
+                 class="card mb-3">
+
+                <div class="card-body">
+
+                    <div class="row align-items-center">
+
+                        <!-- Food Name -->
+                        <div class="col-md-4">
+
+                            <h5 th:text="${item.foodItem.name}">
+                                Chicken Biryani
+                            </h5>
+
+                        </div>
+
+
+                        <!-- Quantity -->
+                        <div class="col-md-2">
+
+                            <strong>Quantity:</strong>
+
+                            <span th:text="${item.quantity}">
+                                1
+                            </span>
+
+                        </div>
+
+
+                        <!-- Price -->
+                        <div class="col-md-3">
+
+                            <strong>Price:</strong>
+
+                            ₹<span th:text="${item.price}">
+                                180.00
+                            </span>
+
+                        </div>
+
+
+                        <!-- Subtotal -->
+                        <div class="col-md-3">
+
+                            <strong>Subtotal:</strong>
+
+                            ₹<span th:text="${item.subtotal}">
+                                180.00
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Review Section -->
+                    <div class="mt-4 p-3 bg-light border rounded">
+
+                        <h5>
+                            ⭐ Review this food
+                        </h5>
+
+                        <form action="/customer/reviews/add"
+                              method="post">
+
+                            <!-- Food Item ID -->
+                            <input type="hidden"
+                                   name="foodItemId"
+                                   th:value="${item.foodItem.id}">
+
+
+                            <!-- Rating -->
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    <strong>Rating</strong>
+                                </label>
+
+                                <select name="rating"
+                                        class="form-select"
+                                        required>
+
+                                    <option value="">
+                                        Select Rating
+                                    </option>
+
+                                    <option value="5">
+                                        ⭐⭐⭐⭐⭐ 5 - Excellent
+                                    </option>
+
+                                    <option value="4">
+                                        ⭐⭐⭐⭐ 4 - Good
+                                    </option>
+
+                                    <option value="3">
+                                        ⭐⭐⭐ 3 - Average
+                                    </option>
+
+                                    <option value="2">
+                                        ⭐⭐ 2 - Poor
+                                    </option>
+
+                                    <option value="1">
+                                        ⭐ 1 - Very Poor
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- Comment -->
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    <strong>Your Comment</strong>
+                                </label>
+
+                                <textarea
+                                    name="comment"
+                                    class="form-control"
+                                    rows="3"
+                                    placeholder="Write your review here..."
+                                    required></textarea>
+
+                            </div>
+
+
+                            <!-- Submit -->
+                            <button type="submit"
+                                    class="btn btn-warning">
+
+                                ⭐ Submit Review
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Total -->
+            <hr>
+
+            <h3 class="text-end">
+
+                Total:
+                ₹<span th:text="${order.totalAmount}">
+                    0.00
+                </span>
+
+            </h3>
+
+        </div>
+
+    </div>
+
+
+    <!-- Payment Details -->
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+
+            <h3>Payment Details</h3>
+
+            <div class="alert alert-success"
+                 th:if="${payment != null}">
+
+                <p class="mb-2">
+
+                    <strong>
+                        Payment Status:
+                    </strong>
+
+                    <span th:text="${payment.paymentStatus}">
+                        SUCCESS
+                    </span>
+
+                </p>
+
+
+                <p class="mb-2">
+
+                    <strong>
+                        Payment Method:
+                    </strong>
+
+                    <span th:text="${payment.paymentMethod}">
+                        UPI
+                    </span>
+
+                </p>
+
+
+                <p class="mb-0">
+
+                    <strong>
+                        Amount Paid:
+                    </strong>
+
+                    ₹<span th:text="${payment.amount}">
+                        0
+                    </span>
+
+                </p>
+
+            </div>
+
+
+            <!-- If payment is not available -->
+            <div class="alert alert-warning"
+                 th:if="${payment == null}">
+
+                Payment information is not available.
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Bootstrap JavaScript -->
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+</html>

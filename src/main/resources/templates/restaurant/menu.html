@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Food Menu</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+</head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/restaurant/dashboard">
+            🍔 Food Menu
+        </a>
+        <div class="d-flex align-items-center gap-2">
+            <a href="/restaurant/dashboard" class="btn btn-outline-light btn-sm">Dashboard</a>
+            <a href="/restaurant/orders" class="btn btn-outline-warning btn-sm">📦 Orders</a>
+            <a href="/restaurant/add-food" class="btn btn-success btn-sm">+ Add Food</a>
+            <form action="/logout" method="post" class="d-inline mb-0">
+                <button type="submit" class="btn btn-danger btn-sm">Logout</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+
+    <h2 th:text="${restaurant.name}">
+        Restaurant
+    </h2>
+
+    <div class="row mt-4">
+
+        <div
+            class="col-md-4 mb-4"
+            th:each="food : ${foodItems}">
+
+            <div class="card shadow h-100">
+
+                <div class="card-body">
+
+                    <h5
+                        class="card-title"
+                        th:text="${food.name}">
+                        Food Name
+                    </h5>
+
+                    <p
+                        class="card-text"
+                        th:text="${food.description}">
+                        Description
+                    </p>
+
+                    <p>
+
+                        <strong>Category:</strong>
+
+                        <span
+                            th:text="${food.category.name}">
+                        </span>
+
+                    </p>
+
+                    <h5>
+
+                        ₹<span
+                            th:text="${food.price}">
+                        </span>
+
+                    </h5>
+
+                    <p>
+
+                        <span
+                            th:if="${food.available}"
+                            class="badge bg-success">
+
+                            Available
+
+                        </span>
+
+                        <span
+                            th:unless="${food.available}"
+                            class="badge bg-danger">
+
+                            Not Available
+
+                        </span>
+
+                    </p>
+
+                    <a
+                        th:href="@{/restaurant/edit-food/{id}(id=${food.id})}"
+                        class="btn btn-warning">
+
+                        Edit
+
+                    </a>
+
+                    <form
+                        th:action="@{/restaurant/delete-food/{id}(id=${food.id})}"
+                        method="post"
+                        class="d-inline">
+
+                        <button
+                            type="submit"
+                            class="btn btn-danger"
+                            onclick="return confirm('Delete this food item?')">
+
+                            Delete
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div
+        th:if="${#lists.isEmpty(foodItems)}"
+        class="alert alert-info">
+
+        No food items added yet.
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

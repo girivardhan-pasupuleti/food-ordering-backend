@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Customer Dashboard - Food Ordering System</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="bg-light">
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+
+        <a class="navbar-brand" href="/customer/dashboard">
+            🍔 Food Ordering System
+        </a>
+
+        <div>
+            <a href="/customer/dashboard"
+               class="btn btn-outline-light btn-sm me-2">
+                🏠 Dashboard
+            </a>
+
+            <a href="/customer/cart"
+               class="btn btn-outline-light btn-sm me-2">
+                🛒 Cart
+            </a>
+
+            <a href="/customer/orders"
+               class="btn btn-outline-light btn-sm me-2">
+                📦 My Orders
+            </a>
+
+            <form action="/logout"
+                  method="post"
+                  style="display:inline;">
+
+                <button type="submit"
+                        class="btn btn-danger btn-sm">
+                    Logout
+                </button>
+
+            </form>
+        </div>
+
+    </div>
+</nav>
+
+
+<!-- MAIN CONTENT -->
+<div class="container mt-5 mb-5">
+
+    <!-- WELCOME -->
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-body p-4">
+
+            <h1 class="fw-bold">
+                👋 Welcome!
+            </h1>
+
+            <p class="text-muted mb-0">
+                Order your favourite food from the best restaurants.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- QUICK ACTIONS -->
+    <h3 class="mb-3">
+        What would you like to do?
+    </h3>
+
+    <div class="row g-4">
+
+        <!-- RESTAURANTS -->
+        <div class="col-md-4">
+
+            <div class="card restaurant-card h-100">
+
+                <div class="card-body text-center p-4">
+
+                    <div style="font-size:55px;">
+                        🍽️
+                    </div>
+
+                    <h4 class="mt-3">
+                        Browse Restaurants
+                    </h4>
+
+                    <p class="text-muted">
+                        Explore restaurants and discover delicious food.
+                    </p>
+
+                    <a href="/customer/restaurants"
+                       class="btn btn-primary w-100">
+                        🍽️ View Restaurants
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- CART -->
+        <div class="col-md-4">
+
+            <div class="card restaurant-card h-100">
+
+                <div class="card-body text-center p-4">
+
+                    <div style="font-size:55px;">
+                        🛒
+                    </div>
+
+                    <h4 class="mt-3">
+                        My Cart
+                    </h4>
+
+                    <p class="text-muted">
+                        View your selected food items and place an order.
+                    </p>
+
+                    <a href="/customer/cart"
+                       class="btn btn-success w-100">
+                        🛒 Open Cart
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ORDERS -->
+        <div class="col-md-4">
+
+            <div class="card restaurant-card h-100">
+
+                <div class="card-body text-center p-4">
+
+                    <div style="font-size:55px;">
+                        📦
+                    </div>
+
+                    <h4 class="mt-3">
+                        My Orders
+                    </h4>
+
+                    <p class="text-muted">
+                        Track your previous and current food orders.
+                    </p>
+
+                    <a href="/customer/orders"
+                       class="btn btn-warning w-100">
+                        📦 View Orders
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- HOW IT WORKS -->
+    <div class="card shadow-sm mt-5">
+
+        <div class="card-body p-4">
+
+            <h3 class="text-center mb-4">
+                🛵 How Food Ordering Works
+            </h3>
+
+            <div class="row text-center">
+
+                <div class="col-md-3 mb-3">
+
+                    <div style="font-size:40px;">
+                        🔎
+                    </div>
+
+                    <h5>1. Choose Restaurant</h5>
+
+                    <p class="text-muted">
+                        Select your favourite restaurant.
+                    </p>
+
+                </div>
+
+
+                <div class="col-md-3 mb-3">
+
+                    <div style="font-size:40px;">
+                        🍕
+                    </div>
+
+                    <h5>2. Choose Food</h5>
+
+                    <p class="text-muted">
+                        Select the food you want.
+                    </p>
+
+                </div>
+
+
+                <div class="col-md-3 mb-3">
+
+                    <div style="font-size:40px;">
+                        🛒
+                    </div>
+
+                    <h5>3. Add to Cart</h5>
+
+                    <p class="text-muted">
+                        Add food items to your cart.
+                    </p>
+
+                </div>
+
+
+                <div class="col-md-3 mb-3">
+
+                    <div style="font-size:40px;">
+                        🛵
+                    </div>
+
+                    <h5>4. Get Your Food</h5>
+
+                    <p class="text-muted">
+                        Place your order and enjoy!
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<footer class="bg-dark text-white text-center py-4">
+
+    <p class="mb-0">
+        © 2026 Food Ordering System
+    </p>
+
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+</html>
