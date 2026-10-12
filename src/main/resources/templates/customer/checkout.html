@@ -3,189 +3,222 @@
 
 <head>
     <meta charset="UTF-8">
-
-    <title>Checkout</title>
-
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Food Ordering System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body class="bg-light">
+<body class="bg-light d-flex flex-column min-vh-100">
 
 <nav class="navbar navbar-dark bg-dark">
-
     <div class="container">
-
-        <a class="navbar-brand"
-           href="/customer/dashboard">
-
+        <a class="navbar-brand fw-bold" href="/customer/dashboard">
             🍔 Food Ordering System
-
         </a>
-
-        <div>
-            <a href="/customer/dashboard"
-               class="btn btn-outline-light btn-sm me-2">
-                🏠 Dashboard
-            </a>
-            <a href="/customer/cart"
-               class="btn btn-outline-light btn-sm me-2">
-                🛒 Cart
-            </a>
-            <a href="/customer/orders"
-               class="btn btn-outline-light btn-sm me-2">
-                📦 My Orders
-            </a>
-            <form action="/logout" method="post" style="display:inline;">
-                <button type="submit" class="btn btn-danger btn-sm">
-                    Logout
-                </button>
+        <div class="d-flex align-items-center gap-2">
+            <a href="/customer/dashboard" class="btn btn-outline-light btn-sm">🏠 Dashboard</a>
+            <a href="/customer/cart" class="btn btn-outline-light btn-sm">🛒 Cart</a>
+            <a href="/customer/orders" class="btn btn-outline-light btn-sm">📦 My Orders</a>
+            <form action="/logout" method="post" class="d-inline mb-0">
+                <button type="submit" class="btn btn-danger btn-sm">Logout</button>
             </form>
         </div>
-
     </div>
-
 </nav>
 
-<div class="container mt-5">
-
-    <h2>Checkout</h2>
+<div class="container mt-4 mb-5">
+    <h2 class="fw-bold mb-3">🛍️ Secure Checkout</h2>
 
     <!-- Error Alert -->
-    <div th:if="${error}" class="alert alert-danger mt-3" th:text="${error}"></div>
+    <div th:if="${error}" class="alert alert-danger shadow-sm" th:text="${error}"></div>
 
-    <div class="row mt-4">
-
-        <div class="col-md-7">
-
-            <div class="card shadow-sm">
-
-                <div class="card-body">
-
-                    <h4>Delivery Address</h4>
-
-                    <form
-    action="/customer/order/place"
-    method="post">
-
-    <div class="mb-3">
-
-        <label class="form-label">
-            Delivery Address
-        </label>
-
-        <textarea
-            name="deliveryAddress"
-            class="form-control"
-            rows="4"
-            placeholder="Enter complete delivery address"
-            required></textarea>
-
-    </div>
-
-    <div class="mb-3">
-
-        <label class="form-label">
-            Payment Method
-        </label>
-
-        <select
-            name="paymentMethod"
-            class="form-select"
-            required>
-
-            <option value="">
-                Select Payment Method
-            </option>
-
-            <option value="CASH_ON_DELIVERY">
-                Cash on Delivery
-            </option>
-
-            <option value="UPI">
-                UPI
-            </option>
-
-            <option value="CARD">
-                Card
-            </option>
-
-        </select>
-
-    </div>
-
-    <button
-        type="submit"
-        class="btn btn-success">
-
-        💳 Pay & Place Order
-
-    </button>
-
-</form>
-
+    <div class="row g-4">
+        <!-- Checkout Form -->
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0 text-primary">📍 Delivery & Payment Details</h5>
                 </div>
+                <div class="card-body p-4">
+                    <form action="/customer/order/place" method="post" id="checkoutForm">
+                        <!-- Address -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Delivery Address *</label>
+                            <textarea name="deliveryAddress" class="form-control" rows="3"
+                                      placeholder="Flat/House No., Street, Landmark, City, Pincode" required></textarea>
+                            <div class="form-text">Our delivery rider will deliver to this exact location.</div>
+                        </div>
 
+                        <!-- Payment Method Selector -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Select Payment Method *</label>
+                            <select name="paymentMethod" id="paymentMethod" class="form-select form-select-lg" required>
+                                <option value="">-- Choose Payment Method --</option>
+                                <option value="UPI">📱 UPI (Google Pay, PhonePe, Paytm QR)</option>
+                                <option value="CARD">💳 Credit / Debit / ATM Card</option>
+                                <option value="CASH_ON_DELIVERY">💵 Cash on Delivery (COD)</option>
+                            </select>
+                        </div>
+
+                        <!-- UPI Dynamic Container -->
+                        <div id="upiContainer" class="card border-primary bg-light mb-4 p-3 shadow-sm d-none">
+                            <div class="text-center">
+                                <span class="badge bg-primary px-3 py-2 mb-2">Scan & Pay via UPI</span>
+                                <h6 class="fw-bold text-dark mb-2">Instant UPI Payment</h6>
+                                
+                                <!-- QR Code Box -->
+                                <div class="d-inline-block bg-white p-3 rounded-3 shadow-sm border mb-3">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=foodordering@okaxis%26pn=Food%20Ordering%20System%26cu=INR" 
+                                         alt="UPI QR Code" class="img-fluid" style="width: 180px; height: 180px;">
+                                </div>
+                                
+                                <p class="small text-muted mb-2">
+                                    Open <strong>GPay</strong>, <strong>PhonePe</strong>, <strong>Paytm</strong>, or <strong>BHIM</strong> and scan this QR code to complete payment.
+                                </p>
+                                
+                                <div class="bg-white p-2 rounded border d-inline-flex align-items-center gap-2 mb-3">
+                                    <span class="text-muted small">UPI ID:</span>
+                                    <strong class="text-primary">foodordering@okaxis</strong>
+                                    <span class="badge bg-success">Verified Merchant</span>
+                                </div>
+
+                                <div class="text-start">
+                                    <label class="form-label small fw-semibold">Or Enter Your UPI ID (Optional)</label>
+                                    <input type="text" class="form-control" placeholder="e.g. mobileNumber@upi / yourname@okhdfcbank">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Dynamic Container -->
+                        <div id="cardContainer" class="card border-success bg-light mb-4 p-3 shadow-sm d-none">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="fw-bold mb-0 text-success">💳 Enter Card Details</h6>
+                                <div>
+                                    <span class="badge bg-dark">Visa</span>
+                                    <span class="badge bg-primary">Mastercard</span>
+                                    <span class="badge bg-info text-dark">RuPay</span>
+                                </div>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label small fw-semibold">Card Number *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">💳</span>
+                                        <input type="text" class="form-control" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" id="cardNumberInput">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small fw-semibold">Cardholder Name *</label>
+                                    <input type="text" class="form-control" placeholder="Full name printed on card">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small fw-semibold">Expiry Date *</label>
+                                    <input type="text" class="form-control" placeholder="MM/YY" maxlength="5">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small fw-semibold">CVV / CVC *</label>
+                                    <input type="password" class="form-control" placeholder="•••" maxlength="3">
+                                </div>
+                                <div class="col-12">
+                                    <small class="text-muted">🔒 Secured with 256-bit SSL encryption. Your card is not stored.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cash on Delivery Dynamic Container -->
+                        <div id="codContainer" class="card border-warning bg-light mb-4 p-3 shadow-sm d-none">
+                            <div class="d-flex align-items-center gap-3">
+                                <div style="font-size: 35px;">💵</div>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Cash on Delivery</h6>
+                                    <p class="small text-muted mb-0">Please keep the cash ready when our delivery agent arrives with your fresh meal.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-lg w-100 py-3 fw-bold shadow">
+                            ✅ Confirm & Place Order
+                        </button>
+                    </form>
+                </div>
             </div>
-
         </div>
 
-        <div class="col-md-5">
-
-            <div class="card shadow-sm">
-
-                <div class="card-body">
-
-                    <h4>Order Summary</h4>
-
-                    <hr>
-
-                    <div
-                        th:each="item : ${cart.items}"
-                        class="mb-3">
-
-                        <strong
-                            th:text="${item.foodItem.name}">
-                            Food
-                        </strong>
-
-                        <br>
-
-                        Quantity:
-                        <span th:text="${item.quantity}">
-                            1
-                        </span>
-
-                        <br>
-
-                        ₹
-                        <span
-                            th:text="${item.foodItem.price * item.quantity}">
-                            0
-                        </span>
-
+        <!-- Order Summary -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0 sticky-top" style="top: 20px;">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0">🧾 Order Summary</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div th:each="item : ${cart.items}" class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                        <div>
+                            <strong th:text="${item.foodItem.name}">Food Item</strong>
+                            <div class="small text-muted">
+                                Quantity: <span th:text="${item.quantity}">1</span> × ₹<span th:text="${item.foodItem.price}">100</span>
+                            </div>
+                        </div>
+                        <div class="fw-bold">
+                            ₹<span th:text="${item.foodItem.price * item.quantity}">100</span>
+                        </div>
                     </div>
 
-                    <hr>
+                    <div class="d-flex justify-content-between align-items-center pt-2">
+                        <span class="fs-5 fw-bold">Total Amount:</span>
+                        <span class="fs-4 fw-bold text-success">
+                            ₹<span th:text="${cart.totalAmount != null ? cart.totalAmount : 0}">0</span>
+                        </span>
+                    </div>
 
-                    <p>
-                        Restaurant:
-                        <strong
-                            th:text="${cart.items[0].foodItem.restaurant.name}">
-                            Restaurant
-                        </strong>
-                    </p>
-
+                    <div th:if="${!#lists.isEmpty(cart.items)}" class="mt-3 p-3 bg-light rounded text-center small text-muted">
+                        🏪 Preparing at: <strong th:text="${cart.items[0].foodItem.restaurant.name}">Restaurant</strong>
+                    </div>
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
 </div>
 
+<footer class="bg-dark text-white text-center py-3 mt-auto">
+    <div class="container">
+        <p class="mb-0 text-secondary small">© 2026 Food Ordering System. Safe & Secure Checkout.</p>
+    </div>
+</footer>
+
+<script>
+    const paymentMethodSelect = document.getElementById('paymentMethod');
+    const upiContainer = document.getElementById('upiContainer');
+    const cardContainer = document.getElementById('cardContainer');
+    const codContainer = document.getElementById('codContainer');
+
+    paymentMethodSelect.addEventListener('change', function () {
+        // Hide all payment containers first
+        upiContainer.classList.add('d-none');
+        cardContainer.classList.add('d-none');
+        codContainer.classList.add('d-none');
+
+        // Show the corresponding container based on choice
+        if (this.value === 'UPI') {
+            upiContainer.classList.remove('d-none');
+        } else if (this.value === 'CARD') {
+            cardContainer.classList.remove('d-none');
+        } else if (this.value === 'CASH_ON_DELIVERY') {
+            codContainer.classList.remove('d-none');
+        }
+    });
+
+    // Auto format card number in groups of 4
+    const cardInput = document.getElementById('cardNumberInput');
+    if (cardInput) {
+        cardInput.addEventListener('input', function (e) {
+            let val = e.target.value.replace(/\D/g, '').substring(0, 16);
+            let formatted = val.match(/.{1,4}/g)?.join(' ') || val;
+            e.target.value = formatted;
+        });
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
