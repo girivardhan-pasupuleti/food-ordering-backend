@@ -12,6 +12,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.foodordering.food_ordering_system.entity.Restaurant;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.List;
 
 @Controller
@@ -23,19 +30,22 @@ public class AdminController {
     private final CategoryRepository categoryRepository;
     private final OrderRepository orderRepository;
     private final FoodItemRepository foodItemRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public AdminController(
             UserRepository userRepository,
             RestaurantRepository restaurantRepository,
             CategoryRepository categoryRepository,
             OrderRepository orderRepository,
-            FoodItemRepository foodItemRepository) {
+            FoodItemRepository foodItemRepository,
+            PasswordEncoder passwordEncoder) {
 
         this.userRepository = userRepository;
         this.restaurantRepository = restaurantRepository;
         this.categoryRepository = categoryRepository;
         this.orderRepository = orderRepository;
         this.foodItemRepository = foodItemRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/dashboard")
@@ -120,5 +130,123 @@ public class AdminController {
         model.addAttribute("users", userRepository.findAll());
 
         return "admin/users";
+    }
+
+    // ================= RESTAURANT MANAGEMENT =================
+
+    @PostMapping("/restaurants/add")
+    public String addRestaurant(
+            @RequestParam String name,
+            @RequestParam String ownerName,
+            @RequestParam String email,
+            @RequestParam String password,
+            @RequestParam String address,
+            @RequestParam(required = false) String phone,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            User owner;
+            if (userRepository.existsByEmail(email)) {
+                owner = userRepository.findByEmail(email).orElseThrow();
+                // Check if user already owns a restaurant
+                if (restaurantRepository.findByOwnerEmail(email).isPresent()) {
+                    redirectAttributes.addFlashAttribute("error", "User with email '" + email + "' already owns a restaurant!");
+                    return "redirect:/admin/restaurants";
+                }
+                // Upgrade to RESTAURANT role
+                owner.setRole(Role.RESTAURANT);
+                userRepository.save(owner);
+            } else {
+                owner = new User();
+                owner.setName(ownerName);
+                owner.setEmail(email);
+                owner.setPassword(passwordEncoder.encode(password));
+                owner.setRole(Role.RESTAURANT);
+                owner = userRepository.save(owner);
+            }
+
+            Restaurant restaurant = new Restaurant();
+            restaurant.setName(name);
+            restaurant.setAddress(address);
+            restaurant.setPhone(phone != null ? phone : "");
+            restaurant.setEmail(email);
+            restaurant.setOwner(owner);
+            restaurantRepository.save(restaurant);
+
+            redirectAttributes.addFlashAttribute("success", "Restaurant '" + name + "' added successfully! Owner login: " + email);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to add restaurant: " + e.getMessage());
+        }
+
+        return "redirect:/admin/restaurants";
+    }
+
+    @PostMapping("/restaurants/{id}/delete")
+    public String deleteRestaurant(
+            @PathVariable Long id,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            if (restaurantRepository.existsById(id)) {
+                restaurantRepository.deleteById(id);
+                redirectAttributes.addFlashAttribute("success", "Restaurant deleted successfully.");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Restaurant not found.");
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Cannot delete restaurant (it may have active menu items or orders): " + e.getMessage());
+        }
+
+        return "redirect:/admin/restaurants";
+    }
+
+    // ================= USER & ADMIN ACCESS MANAGEMENT =================
+
+    @PostMapping("/users/add")
+    public String addUser(
+            @RequestParam String name,
+            @RequestParam String email,
+            @RequestParam String password,
+            @RequestParam Role role,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            if (userRepository.existsByEmail(email)) {
+                redirectAttributes.addFlashAttribute("error", "User with email '" + email + "' already exists!");
+                return "redirect:/admin/users";
+            }
+
+            User user = new User();
+            user.setName(name);
+            user.setEmail(email);
+            user.setPassword(passwordEncoder.encode(password));
+            user.setRole(role);
+            userRepository.save(user);
+
+            redirectAttributes.addFlashAttribute("success", "User '" + name + "' created successfully with role " + role + "!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to create user: " + e.getMessage());
+        }
+
+        return "redirect:/admin/users";
+    }
+
+    @PostMapping("/users/{id}/change-role")
+    public String changeUserRole(
+            @PathVariable Long id,
+            @RequestParam Role role,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+            user.setRole(role);
+            userRepository.save(user);
+
+            redirectAttributes.addFlashAttribute("success", "Updated " + user.getName() + "'s role to " + role + "!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to update role: " + e.getMessage());
+        }
+
+        return "redirect:/admin/users";
     }
 }
