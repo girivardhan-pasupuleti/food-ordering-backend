@@ -242,6 +242,17 @@ public class AdminController {
             user.setRole(role);
             userRepository.save(user);
 
+            // If changed to RESTAURANT, ensure they have a linked Restaurant profile so dashboard works immediately
+            if (role == Role.RESTAURANT && restaurantRepository.findByOwnerEmail(user.getEmail()).isEmpty()) {
+                Restaurant newRestaurant = new Restaurant();
+                newRestaurant.setName(user.getName() + "'s Kitchen");
+                newRestaurant.setAddress("Main Street");
+                newRestaurant.setPhone("9876543210");
+                newRestaurant.setEmail(user.getEmail());
+                newRestaurant.setOwner(user);
+                restaurantRepository.save(newRestaurant);
+            }
+
             redirectAttributes.addFlashAttribute("success", "Updated " + user.getName() + "'s role to " + role + "!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Failed to update role: " + e.getMessage());
